@@ -6,6 +6,7 @@
 import express from 'express';
 import cors from 'cors';
 import { createInfluencer } from './src/index.js';
+import { generateSyntheticVoice, generateSyntheticSignature, listVoiceProfiles } from './src/synthetic-voice-generator.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -80,6 +81,48 @@ app.post('/api/generate', async (req, res) => {
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'IdolForge API is running' });
+});
+
+// Synthetic voice endpoints
+app.post('/api/voice/generate', async (req, res) => {
+  try {
+    const { persona, text } = req.body;
+
+    if (!persona || !text) {
+      return res.status(400).json({
+        error: 'Missing required fields: persona and text are required'
+      });
+    }
+
+    const result = await generateSyntheticVoice(persona, text);
+
+    res.json({
+      success: result.success,
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Voice generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.get('/api/voice/profiles', (req, res) => {
+  try {
+    const profiles = listVoiceProfiles();
+    res.json({
+      success: true,
+      profiles
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
 });
 
 // Serve index.html for root

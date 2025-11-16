@@ -1,6 +1,166 @@
 // IdolForge Frontend Logic
 
 let currentData = null;
+let currentMode = 'basic';
+
+// Initialize keyword pills on page load
+document.addEventListener('DOMContentLoaded', () => {
+    initializeKeywordPills();
+    switchMode('basic'); // Start in basic mode
+});
+
+// Mode switching: Basic vs Advanced
+function switchMode(mode) {
+    currentMode = mode;
+
+    // Update button states
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event?.target?.classList.add('active');
+
+    if (mode === 'basic') {
+        // Show keyword pills and randomizer
+        document.getElementById('randomizer').classList.remove('hidden');
+        document.getElementById('vibeKeywords').classList.remove('hidden');
+        document.getElementById('nicheKeywords').classList.remove('hidden');
+        document.getElementById('traitKeywords').classList.remove('hidden');
+
+        // Hide advanced options
+        document.getElementById('imageDescription').closest('.form-group').style.display = 'none';
+        document.getElementById('musicMoodGroup').style.display = 'none';
+        document.getElementById('postCount').closest('.form-group').style.display = 'none';
+    } else {
+        // Hide keyword pills and randomizer
+        document.getElementById('randomizer').classList.add('hidden');
+        document.getElementById('vibeKeywords').classList.add('hidden');
+        document.getElementById('nicheKeywords').classList.add('hidden');
+        document.getElementById('traitKeywords').classList.add('hidden');
+
+        // Show advanced options
+        document.getElementById('imageDescription').closest('.form-group').style.display = 'block';
+        document.getElementById('postCount').closest('.form-group').style.display = 'block';
+    }
+}
+
+// Initialize keyword pills
+function initializeKeywordPills() {
+    // Vibes
+    const vibeContainer = document.getElementById('vibeKeywords');
+    window.VIBES.forEach(vibe => {
+        const pill = createKeywordPill(vibe, 'vibe');
+        vibeContainer.appendChild(pill);
+    });
+
+    // Niches
+    const nicheContainer = document.getElementById('nicheKeywords');
+    window.NICHES.forEach(niche => {
+        const pill = createKeywordPill(niche.label + ' ' + niche.icon, 'niche');
+        nicheContainer.appendChild(pill);
+    });
+
+    // Traits
+    const traitContainer = document.getElementById('traitKeywords');
+    window.TRAITS.forEach(trait => {
+        const pill = createKeywordPill(trait, 'traits');
+        traitContainer.appendChild(pill);
+    });
+}
+
+// Create keyword pill element
+function createKeywordPill(text, fieldId) {
+    const pill = document.createElement('div');
+    pill.className = 'keyword-pill';
+    pill.textContent = text;
+    pill.onclick = () => selectKeyword(text, fieldId, pill);
+    return pill;
+}
+
+// Select keyword
+function selectKeyword(text, fieldId, element) {
+    const input = document.getElementById(fieldId);
+
+    // Remove icon from text if present
+    const cleanText = text.replace(/[^\w\s-]/g, '').trim();
+
+    // Toggle selection
+    if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        // Remove from input
+        const values = input.value.split(',').map(v => v.trim()).filter(v => v !== cleanText);
+        input.value = values.join(', ');
+    } else {
+        element.classList.add('selected');
+        // Add to input
+        const current = input.value ? input.value + ', ' : '';
+        input.value = current + cleanText;
+    }
+}
+
+// Randomizer function
+function randomize() {
+    const result = window.randomizeInfluencer();
+
+    // Fill form
+    document.getElementById('vibe').value = result.vibe;
+    document.getElementById('niche').value = result.niche;
+    document.getElementById('traits').value = result.traits;
+
+    // Show result
+    const resultDiv = document.getElementById('randomResult');
+    resultDiv.classList.remove('hidden');
+    resultDiv.innerHTML = `
+        <h4>${result.type} from ${result.location}</h4>
+        <p><strong>Vibe:</strong> ${result.vibe}</p>
+        <p><strong>Niche:</strong> ${result.niche}</p>
+        <p><strong>Traits:</strong> ${result.traits}</p>
+        <p style="margin-top: 8px; font-style: italic;">"${result.description}"</p>
+    `;
+
+    // Update selected pills
+    updateSelectedPills();
+}
+
+// Update selected pills based on input values
+function updateSelectedPills() {
+    // Clear all selections
+    document.querySelectorAll('.keyword-pill').forEach(pill => {
+        pill.classList.remove('selected');
+    });
+
+    // Vibe
+    const vibeValue = document.getElementById('vibe').value;
+    if (vibeValue) {
+        const vibes = vibeValue.split(',').map(v => v.trim().toLowerCase());
+        document.querySelectorAll('#vibeKeywords .keyword-pill').forEach(pill => {
+            if (vibes.includes(pill.textContent.toLowerCase())) {
+                pill.classList.add('selected');
+            }
+        });
+    }
+
+    // Similar for niche and traits
+    const nicheValue = document.getElementById('niche').value;
+    if (nicheValue) {
+        const niches = nicheValue.split(',').map(v => v.trim().toLowerCase());
+        document.querySelectorAll('#nicheKeywords .keyword-pill').forEach(pill => {
+            const text = pill.textContent.replace(/[^\w\s-]/g, '').trim().toLowerCase();
+            if (niches.includes(text)) {
+                pill.classList.add('selected');
+            }
+        });
+    }
+
+    const traitsValue = document.getElementById('traits').value;
+    if (traitsValue) {
+        const traits = traitsValue.split(',').map(v => v.trim().toLowerCase());
+        document.querySelectorAll('#traitKeywords .keyword-pill').forEach(pill => {
+            if (traits.includes(pill.textContent.toLowerCase())) {
+                pill.classList.add('selected');
+            }
+        });
+    }
+}
 
 // Toggle music input
 document.getElementById('includeMusic').addEventListener('change', (e) => {

@@ -471,6 +471,104 @@
             display: none;
         }
 
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--grey);
+            padding: 4px;
+        }
+
+        .mode-btn {
+            padding: 6px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn:hover {
+            color: var(--text);
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: var(--black);
+        }
+
+        /* Randomizer */
+        .randomizer-section {
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .btn-randomize {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent), #D4AF37);
+            color: var(--black);
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-randomize:hover {
+            opacity: 0.9;
+        }
+
+        .random-result {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--grey);
+            border-left: 3px solid var(--accent);
+        }
+
+        .random-result h4 {
+            font-size: 0.875rem;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .random-result p {
+            font-size: 0.8125rem;
+            color: var(--text-dim);
+            margin: 4px 0;
+        }
+
+        /* Keyword Pills */
+        .keyword-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .keyword-pill {
+            padding: 6px 12px;
+            background: var(--grey);
+            border: 1px solid transparent;
+            color: var(--text);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .keyword-pill:hover {
+            border-color: var(--accent);
+        }
+
+        .keyword-pill.selected {
+            background: rgba(157, 78, 221, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .layout {
@@ -530,20 +628,41 @@
             <!-- Form Panel -->
             <div class="form-panel">
                 <div class="card">
-                    <h2 class="card-title">Configuration</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h2 class="card-title" style="margin: 0;">Configuration</h2>
+                        <div class="mode-toggle">
+                            <button type="button" class="mode-btn active" onclick="switchMode('basic')">Basic</button>
+                            <button type="button" class="mode-btn" onclick="switchMode('advanced')">Advanced</button>
+                        </div>
+                    </div>
+
+                    <!-- Randomizer (Basic Mode) -->
+                    <div id="randomizer" class="randomizer-section">
+                        <button type="button" class="btn-randomize" onclick="randomize()">
+                            🎲 Generate Random Influencer
+                        </button>
+                        <div id="randomResult" class="random-result hidden"></div>
+                    </div>
+
                     <form id="influencerForm">
+                        <!-- Vibe Selection -->
                         <div class="form-group">
                             <label for="vibe">Vibe</label>
+                            <div id="vibeKeywords" class="keyword-pills hidden"></div>
                             <input type="text" id="vibe" required placeholder="soft dreamy pastel">
                         </div>
 
+                        <!-- Niche Selection -->
                         <div class="form-group">
                             <label for="niche">Niche</label>
+                            <div id="nicheKeywords" class="keyword-pills hidden"></div>
                             <input type="text" id="niche" required placeholder="beauty">
                         </div>
 
+                        <!-- Traits Selection -->
                         <div class="form-group">
                             <label for="traits">Traits</label>
+                            <div id="traitKeywords" class="keyword-pills hidden"></div>
                             <input type="text" id="traits" placeholder="gentle, inspiring">
                         </div>
 
@@ -650,6 +769,7 @@
             }
         }
     </script>
+    <script src="keywords.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
