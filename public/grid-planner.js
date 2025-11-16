@@ -390,6 +390,8 @@ function renderPlatformTabs() {
     const platformNames = {
         'instagram': 'Instagram',
         'tiktok': 'TikTok',
+        'youtube': 'YouTube',
+        'discord': 'Discord',
         'x': 'X (Twitter)',
         'onlyfans': 'OnlyFans'
     };
