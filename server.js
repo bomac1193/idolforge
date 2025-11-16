@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 // API endpoint to generate influencer
-app.post('/api/generate', (req, res) => {
+app.post('/api/generate', async (req, res) => {
   try {
     const {
       vibe,
@@ -30,6 +30,8 @@ app.post('/api/generate', (req, res) => {
       platforms,
       imageDescription,
       includeMusic,
+      includeMythos,
+      includeImages,
       genreMood,
       postCount
     } = req.body;
@@ -47,14 +49,16 @@ app.post('/api/generate', (req, res) => {
       platformsArray = platforms.split(',').map(p => p.trim());
     }
 
-    // Generate influencer
-    const result = createInfluencer({
+    // Generate influencer (now async)
+    const result = await createInfluencer({
       vibe,
       niche,
       traits: traits || '',
       platforms: platformsArray || ['instagram', 'tiktok'],
       imageDescription: imageDescription || null,
       includeMusic: includeMusic === true || includeMusic === 'true',
+      includeMythos: includeMythos !== false, // default true
+      includeImages: includeImages !== false, // default true
       genreMood: genreMood || 'pop upbeat',
       postCount: parseInt(postCount) || 5
     });

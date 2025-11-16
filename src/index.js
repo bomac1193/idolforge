@@ -6,8 +6,10 @@
 import { generatePersona } from './persona-generator.js';
 import { generatePosts } from './post-generator.js';
 import { generateSong } from './music-generator.js';
+import { generateMythos } from './mythos-generator.js';
+import { generatePersonaImages, generateMockImages } from './image-generator.js';
 
-export function createInfluencer(input) {
+export async function createInfluencer(input) {
   const {
     vibe,
     niche,
@@ -15,6 +17,8 @@ export function createInfluencer(input) {
     platforms = ['instagram', 'tiktok', 'x'],
     imageDescription = null,
     includeMusic = false,
+    includeMythos = true,
+    includeImages = true,
     genreMood = 'pop upbeat',
     postCount = 5
   } = input;
@@ -36,6 +40,22 @@ export function createInfluencer(input) {
     posts
   };
 
+  // Add mythos/backstory
+  if (includeMythos) {
+    output.mythos = generateMythos(persona);
+  }
+
+  // Add images
+  if (includeImages) {
+    try {
+      // Try real image generation, fall back to mock images
+      output.images = await generatePersonaImages(persona);
+    } catch (error) {
+      console.log('Using mock images:', error.message);
+      output.images = generateMockImages(persona);
+    }
+  }
+
   // Add music if requested
   if (includeMusic) {
     output.music = generateSong(persona, genreMood);
@@ -44,4 +64,4 @@ export function createInfluencer(input) {
   return output;
 }
 
-export { generatePersona, generatePosts, generateSong };
+export { generatePersona, generatePosts, generateSong, generateMythos, generatePersonaImages };
