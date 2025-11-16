@@ -7,6 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import { createInfluencer } from './src/index.js';
 import { generateSyntheticVoice, generateSyntheticSignature, listVoiceProfiles } from './src/synthetic-voice-generator.js';
+import { generateVoiceWithEngine, generateVoiceComparison, listAllVoiceOptions, VOICE_ENGINES } from './src/unified-voice-generator.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -116,6 +117,82 @@ app.get('/api/voice/profiles', (req, res) => {
     res.json({
       success: true,
       profiles
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Unified voice generation endpoints
+app.post('/api/voice/generate-unified', async (req, res) => {
+  try {
+    const { persona, text, engine = 'auto' } = req.body;
+
+    if (!persona || !text) {
+      return res.status(400).json({
+        error: 'Missing required fields: persona and text are required'
+      });
+    }
+
+    // Validate engine
+    const validEngines = Object.values(VOICE_ENGINES);
+    if (!validEngines.includes(engine) && engine !== 'auto') {
+      return res.status(400).json({
+        error: `Invalid engine. Valid options: ${validEngines.join(', ')}, auto`
+      });
+    }
+
+    const result = await generateVoiceWithEngine(persona, text, engine);
+
+    res.json({
+      success: result.success,
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Unified voice generation error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.post('/api/voice/compare', async (req, res) => {
+  try {
+    const { persona, text } = req.body;
+
+    if (!persona || !text) {
+      return res.status(400).json({
+        error: 'Missing required fields: persona and text are required'
+      });
+    }
+
+    const results = await generateVoiceComparison(persona, text);
+
+    res.json({
+      success: true,
+      data: results
+    });
+
+  } catch (error) {
+    console.error('Voice comparison error:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.get('/api/voice/options', (req, res) => {
+  try {
+    const options = listAllVoiceOptions();
+    res.json({
+      success: true,
+      options
     });
   } catch (error) {
     res.status(500).json({

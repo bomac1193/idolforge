@@ -167,6 +167,11 @@ document.getElementById('includeMusic').addEventListener('change', (e) => {
     document.getElementById('musicMoodGroup').classList.toggle('hidden', !e.target.checked);
 });
 
+// Toggle voice input
+document.getElementById('includeVoice').addEventListener('change', (e) => {
+    document.getElementById('voiceEngineGroup').classList.toggle('hidden', !e.target.checked);
+});
+
 // Form submission
 document.getElementById('influencerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -180,10 +185,12 @@ async function generateInfluencer() {
     const imageDescription = document.getElementById('imageDescription').value;
     const includeMusic = document.getElementById('includeMusic').checked;
     const genreMood = document.getElementById('genreMood').value;
+    const includeVoice = document.getElementById('includeVoice').checked;
+    const voiceEngine = document.getElementById('voiceEngine').value;
     const postCount = document.getElementById('postCount').value;
 
     const platforms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
-        .filter(cb => cb.id !== 'includeMusic')
+        .filter(cb => cb.id !== 'includeMusic' && cb.id !== 'includeVoice')
         .map(cb => cb.value);
 
     if (platforms.length === 0) {
@@ -204,7 +211,8 @@ async function generateInfluencer() {
             body: JSON.stringify({
                 vibe, niche, traits, platforms,
                 imageDescription, includeMusic,
-                genreMood, postCount
+                genreMood, includeVoice, voiceEngine,
+                postCount
             })
         });
 
