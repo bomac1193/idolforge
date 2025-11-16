@@ -1,0 +1,65 @@
+{
+  "templates": {
+    "random_generation": {
+      "description": "Generate an influencer from vibe and niche",
+      "input": {
+        "vibe": "{{vibe}}",
+        "niche": "{{niche}}",
+        "traits": "{{traits}}",
+        "platforms": ["{{platform1}}", "{{platform2}}"]
+      },
+      "example": {
+        "vibe": "soft dreamy",
+        "niche": "beauty",
+        "traits": "gentle, inspiring",
+        "platforms": ["instagram", "tiktok"]
+      }
+    },
+    "from_photo": {
+      "description": "Create influencer based on image description",
+      "input": {
+        "imageDescription": "{{image_description}}",
+        "vibe": "{{vibe_notes}}",
+        "niche": "{{niche}}",
+        "platforms": ["{{platforms}}"]
+      },
+      "example": {
+        "imageDescription": "Person in urban setting, leather jacket, city background",
+        "vibe": "edgy confident",
+        "niche": "fashion",
+        "platforms": ["instagram", "x"]
+      }
+    },
+    "with_music": {
+      "description": "Generate influencer with custom song",
+      "input": {
+        "vibe": "{{vibe}}",
+        "niche": "{{niche}}",
+        "platforms": ["{{platforms}}"],
+        "includeMusic": true,
+        "genreMood": "{{genre_mood}}"
+      },
+      "example": {
+        "vibe": "vibrant energetic",
+        "niche": "fitness",
+        "platforms": ["tiktok"],
+        "includeMusic": true,
+        "genreMood": "hip-hop motivational"
+      }
+    }
+  },
+  "minimal_prompts": {
+    "A": {
+      "description": "Randomiser generation",
+      "template": "Vibe: {{vibe}}\nNiche: {{niche}}\nTraits: {{traits}}\nPlatforms: {{platforms}}\n\nCreate an influencer."
+    },
+    "B": {
+      "description": "From photo description",
+      "template": "Image description: {{image_description}}\nVibe notes: {{notes}}\nPlatforms: {{platforms}}\n\nCreate an influencer."
+    },
+    "C": {
+      "description": "With songwriting",
+      "template": "Vibe: {{vibe}}\nNiche: {{niche}}\nPlatforms: {{platforms}}\n\nInclude the music block. Genre/mood: {{genre_mood}}."
+    }
+  }
+}
