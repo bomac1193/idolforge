@@ -73,14 +73,14 @@ function displayResult(data) {
 
     let html = '';
 
-    // Add Grid Planner CTA at top if has posts
+    // Add Content Planner CTA at top if has posts
     if (posts && posts.length > 0) {
         html += `
             <div style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(157, 78, 221, 0.1)); border: 1px solid #D4AF37; padding: 24px; margin-bottom: 40px; text-align: center;">
-                <h3 style="font-size: 1.25rem; margin-bottom: 12px;">Plan Your Instagram Grid</h3>
-                <p style="color: var(--text-dim); margin-bottom: 20px;">Use the Grid Planner to arrange these posts and preview your feed aesthetic</p>
+                <h3 style="font-size: 1.25rem; margin-bottom: 12px;">Schedule & Plan Your Content</h3>
+                <p style="color: var(--text-dim); margin-bottom: 20px;">Use the Content Planner to organize posts for ${currentData.platforms?.join(', ') || 'your platforms'} and preview your feed aesthetic</p>
                 <button onclick="openGridPlanner()" style="padding: 12px 32px; background: linear-gradient(135deg, #D4AF37, var(--accent)); color: var(--black); border: none; font-weight: 700; cursor: pointer; font-size: 0.875rem;">
-                    Open Grid Planner PRO ✨
+                    Open Content Planner PRO ✨
                 </button>
             </div>
         `;

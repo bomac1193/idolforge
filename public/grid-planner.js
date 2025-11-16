@@ -5,10 +5,13 @@ let currentPosts = [];
 let collections = [];
 let draggedPost = null;
 let draggedCell = null;
+let selectedPlatforms = [];
+let activePlatform = 'instagram';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadCollections();
+    loadGeneratedData();
     loadSamplePosts();
     initializeGrid(9); // 3x3 grid
 });
@@ -327,6 +330,32 @@ function loadCollections() {
     }
 }
 
+// Load generated influencer data and platforms
+function loadGeneratedData() {
+    const savedData = localStorage.getItem('idolforge_current_influencer');
+    if (savedData) {
+        const data = JSON.parse(savedData);
+
+        // Extract platforms from generated posts
+        if (data.posts) {
+            const platforms = [...new Set(data.posts.map(p => p.platform))];
+            selectedPlatforms = platforms;
+
+            // Set active platform to first one
+            if (platforms.length > 0) {
+                activePlatform = platforms[0];
+            }
+
+            // Render platform tabs
+            renderPlatformTabs();
+        }
+    } else {
+        // Default platforms if no data
+        selectedPlatforms = ['instagram'];
+        renderPlatformTabs();
+    }
+}
+
 // Load posts from generated influencer
 function loadGeneratedPosts() {
     const savedData = localStorage.getItem('idolforge_current_influencer');
@@ -346,6 +375,67 @@ function loadGeneratedPosts() {
             renderPosts();
         }
     }
+}
+
+// Render platform tabs
+function renderPlatformTabs() {
+    const tabsContainer = document.getElementById('platformTabs');
+    if (!tabsContainer) return;
+
+    if (selectedPlatforms.length === 0) {
+        tabsContainer.innerHTML = '<div style="font-size: 0.75rem; color: var(--text-dim);">Generate an influencer first to see platform-specific planners</div>';
+        return;
+    }
+
+    const platformNames = {
+        'instagram': 'Instagram',
+        'tiktok': 'TikTok',
+        'x': 'X (Twitter)',
+        'onlyfans': 'OnlyFans'
+    };
+
+    tabsContainer.innerHTML = selectedPlatforms.map(platform => `
+        <button class="platform-tab ${platform === activePlatform ? 'active' : ''}"
+                onclick="switchPlatform('${platform}')">
+            ${platformNames[platform] || platform}
+        </button>
+    `).join('');
+}
+
+// Switch platform
+function switchPlatform(platform) {
+    activePlatform = platform;
+    renderPlatformTabs();
+
+    // Update grid based on platform
+    if (platform === 'instagram') {
+        // 3x3 grid for Instagram
+        if (gridData.length !== 9) {
+            initializeGrid(9);
+        }
+    } else if (platform === 'tiktok') {
+        // Vertical feed for TikTok (1 column, multiple rows)
+        document.getElementById('instagramGrid').style.gridTemplateColumns = '1fr';
+        if (gridData.length < 5) {
+            initializeGrid(5);
+        }
+    } else {
+        // Default grid
+        if (gridData.length !== 9) {
+            initializeGrid(9);
+        }
+    }
+
+    // Filter posts by platform
+    filterPostsByPlatform();
+}
+
+// Filter posts by platform
+function filterPostsByPlatform() {
+    const filtered = currentPosts.filter(post =>
+        post.platform === activePlatform || !post.platform
+    );
+    renderPosts(filtered);
 }
 
 // Initialize with generated posts if available
