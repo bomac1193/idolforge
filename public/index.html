@@ -569,6 +569,27 @@
             color: var(--accent);
         }
 
+        /* Voice Characteristic Pills */
+        .voice-characteristic-pill {
+            padding: 6px 12px;
+            background: var(--grey);
+            border: 1px solid transparent;
+            color: var(--text);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .voice-characteristic-pill:hover {
+            border-color: var(--accent);
+        }
+
+        .voice-characteristic-pill.selected {
+            background: rgba(157, 78, 221, 0.2);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .layout {
@@ -738,6 +759,35 @@
                             </div>
                         </div>
 
+                        <!-- Voice Customization Section -->
+                        <div class="form-group" id="voiceCustomizationGroup">
+                            <label for="voiceText">Voice Text (Optional)</label>
+                            <textarea id="voiceText" rows="3" placeholder="Enter text for voice generation... Use {name}, {niche}, {vibe} as variables. Leave empty to use default intro."></textarea>
+                            <div style="margin-top: 8px; font-size: 0.75rem; color: var(--text-dim);">
+                                💡 <strong>Tip:</strong> Use [laughs], [sighs], ♪ for Bark effects
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="voiceCharacteristicsGroup">
+                            <label>Voice Characteristics (Optional)</label>
+                            <div id="voiceCharacteristicPills" class="keyword-pills" style="margin-bottom: 12px;"></div>
+                            <input type="hidden" id="voiceCharacteristics">
+                        </div>
+
+                        <div class="form-group" id="voicePresetsGroup">
+                            <label>Voice Presets</label>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('AI Influencer Intro')">Intro</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Mysterious Persona')">Mysterious</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Hype Announcement')">Hype</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Chill Vibe')">Chill</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Glitch Entity')">Glitch</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Music Drop')">Music</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Professional Bio')">Bio</button>
+                                <button type="button" class="preset-btn" onclick="applyVoicePreset('Cyberpunk Persona')">Cyberpunk</button>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="postCount">Posts per Platform</label>
                             <input type="number" id="postCount" value="5" min="1" max="20">
@@ -795,6 +845,7 @@
         }
     </script>
     <script src="keywords.js"></script>
+    <script src="voice-keywords.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

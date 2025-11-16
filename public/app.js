@@ -6,6 +6,7 @@ let currentMode = 'basic';
 // Initialize keyword pills on page load
 document.addEventListener('DOMContentLoaded', () => {
     initializeKeywordPills();
+    initializeVoiceKeywords(); // Initialize voice characteristic pills
     switchMode('basic'); // Start in basic mode
 });
 
@@ -169,7 +170,11 @@ document.getElementById('includeMusic').addEventListener('change', (e) => {
 
 // Toggle voice input
 document.getElementById('includeVoice').addEventListener('change', (e) => {
-    document.getElementById('voiceEngineGroup').classList.toggle('hidden', !e.target.checked);
+    const isChecked = e.target.checked;
+    document.getElementById('voiceEngineGroup').classList.toggle('hidden', !isChecked);
+    document.getElementById('voiceCustomizationGroup').classList.toggle('hidden', !isChecked);
+    document.getElementById('voiceCharacteristicsGroup').classList.toggle('hidden', !isChecked);
+    document.getElementById('voicePresetsGroup').classList.toggle('hidden', !isChecked);
 });
 
 // Form submission
@@ -187,6 +192,8 @@ async function generateInfluencer() {
     const genreMood = document.getElementById('genreMood').value;
     const includeVoice = document.getElementById('includeVoice').checked;
     const voiceEngine = document.getElementById('voiceEngine').value;
+    const voiceText = document.getElementById('voiceText').value;
+    const voiceCharacteristics = document.getElementById('voiceCharacteristics').value;
     const postCount = document.getElementById('postCount').value;
 
     const platforms = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
@@ -212,6 +219,7 @@ async function generateInfluencer() {
                 vibe, niche, traits, platforms,
                 imageDescription, includeMusic,
                 genreMood, includeVoice, voiceEngine,
+                voiceText, voiceCharacteristics,
                 postCount
             })
         });
