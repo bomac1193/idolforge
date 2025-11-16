@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid Planner - IDOLFORGE PRO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --dark: #0f0f0f;
+            --grey: #1a1a1a;
+            --accent: #9d4edd;
+            --pro: #D4AF37;
+            --text: #ffffff;
+            --text-dim: #666666;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--black);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .pro-badge {
+            background: linear-gradient(135deg, var(--pro), var(--accent));
+            color: var(--black);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            border-color: var(--accent);
+            background: rgba(157, 78, 221, 0.1);
+        }
+
+        /* Layout */
+        .planner-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px 300px;
+            gap: 40px;
+        }
+
+        /* Grid Preview */
+        .grid-preview {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            padding: 40px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .preview-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--grey);
+            border: 1px solid transparent;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .instagram-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            background: var(--black);
+            padding: 4px;
+            border: 1px solid var(--border);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            background: var(--grey);
+            border: 2px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grid-cell.filled {
+            border-style: solid;
+            border-color: transparent;
+        }
+
+        .grid-cell:hover {
+            border-color: var(--accent);
+        }
+
+        .grid-cell.drag-over {
+            border-color: var(--pro);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .grid-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cell-placeholder {
+            font-size: 2rem;
+            opacity: 0.2;
+        }
+
+        .cell-number {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--text);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .cell-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .grid-cell:hover .cell-actions {
+            opacity: 1;
+        }
+
+        .cell-action-btn {
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell-action-btn:hover {
+            background: var(--accent);
+        }
+
+        /* Post Library */
+        .post-library {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            padding: 24px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        .library-header {
+            margin-bottom: 20px;
+        }
+
+        .library-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            background: var(--grey);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .post-item {
+            aspect-ratio: 1;
+            background: var(--grey);
+            border: 2px solid transparent;
+            cursor: grab;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .post-item:hover {
+            border-color: var(--accent);
+        }
+
+        .post-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .post-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 20px 12px 12px;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .post-item:hover .post-info {
+            opacity: 1;
+        }
+
+        /* Collections Panel */
+        .collections-panel {
+            background: var(--dark);
+            border: 1px solid var(--border);
+            padding: 24px;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-new {
+            padding: 8px 16px;
+            background: var(--accent);
+            color: var(--black);
+            border: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-new:hover {
+            opacity: 0.9;
+        }
+
+        .collections-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .collection-item {
+            background: var(--grey);
+            border: 1px solid transparent;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .collection-item:hover,
+        .collection-item.active {
+            border-color: var(--accent);
+        }
+
+        .collection-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .collection-meta {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .collection-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2px;
+            margin-top: 12px;
+        }
+
+        .collection-preview-cell {
+            aspect-ratio: 1;
+            background: var(--black);
+        }
+
+        .collection-preview-cell img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Controls */
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--grey);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-dim);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .planner-layout {
+                grid-template-columns: 1fr 300px;
+            }
+
+            .collections-panel {
+                grid-column: span 2;
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .planner-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .instagram-grid {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="brand-section">
+                <h1 class="brand">IDOLFORGE</h1>
+                <span class="pro-badge">PRO</span>
+            </div>
+            <nav class="nav-tabs">
+                <button class="tab-btn" onclick="window.location.href='/'">Generator</button>
+                <button class="tab-btn active">Grid Planner</button>
+            </nav>
+        </header>
+
+        <div class="planner-layout">
+            <!-- Grid Preview -->
+            <div class="grid-preview">
+                <div class="preview-header">
+                    <h2 class="preview-title">Instagram Grid Preview</h2>
+                    <div class="preview-controls">
+                        <button class="icon-btn" onclick="clearGrid()" title="Clear all">🗑️</button>
+                        <button class="icon-btn" onclick="shuffleGrid()" title="Shuffle">🔀</button>
+                        <button class="icon-btn" onclick="exportGrid()" title="Export">📥</button>
+                    </div>
+                </div>
+
+                <div class="instagram-grid" id="instagramGrid">
+                    <!-- 9 cells (3x3) by default -->
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn" onclick="addRow()">Add Row</button>
+                    <button class="btn" onclick="removeRow()">Remove Row</button>
+                    <button class="btn btn-primary" onclick="saveCollection()">Save Collection</button>
+                </div>
+            </div>
+
+            <!-- Post Library -->
+            <div class="post-library">
+                <div class="library-header">
+                    <h3 class="library-title">Post Library</h3>
+                    <input type="text" class="search-box" placeholder="Search posts..." id="searchInput" oninput="filterPosts()">
+                </div>
+
+                <div class="posts-grid" id="postsLibrary">
+                    <!-- Posts will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Collections -->
+            <div class="collections-panel">
+                <div class="panel-header">
+                    <h3 class="library-title">Collections</h3>
+                    <button class="btn-new" onclick="createNewCollection()">+ New</button>
+                </div>
+
+                <div class="collections-list" id="collectionsList">
+                    <div class="empty-state">
+                        <div class="empty-icon">📁</div>
+                        <p>No collections yet.<br>Save your first grid layout!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="grid-planner.js"></script>
+</body>
+</html>

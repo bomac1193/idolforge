@@ -515,8 +515,15 @@
 <body>
     <div class="container">
         <header>
-            <h1 class="brand">IDOLFORGE</h1>
-            <p class="tagline">AI Influencer Generator</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div>
+                    <h1 class="brand">IDOLFORGE</h1>
+                    <p class="tagline">AI Influencer Generator</p>
+                </div>
+                <button class="btn-pro" onclick="openGridPlanner()" style="padding: 12px 24px; background: linear-gradient(135deg, #D4AF37, var(--accent)); color: var(--black); border: none; font-weight: 700; cursor: pointer; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                    ✨ Grid Planner PRO
+                </button>
+            </div>
         </header>
 
         <div class="layout">
@@ -616,6 +623,25 @@
         </div>
     </div>
 
+    <!-- PRO Modal -->
+    <div id="proModalContainer"></div>
+
+    <script>
+        // Load PRO modal
+        fetch('/pro-modal.html')
+            .then(r => r.text())
+            .then(html => {
+                document.getElementById('proModalContainer').innerHTML = html;
+            });
+
+        function openGridPlanner() {
+            if (checkProStatus && checkProStatus()) {
+                window.location.href = '/grid-planner.html';
+            } else {
+                setTimeout(() => showProModal && showProModal(), 100);
+            }
+        }
+    </script>
     <script src="app.js"></script>
 </body>
 </html>

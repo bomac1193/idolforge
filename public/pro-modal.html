@@ -1,0 +1,328 @@
+<!-- PRO Upgrade Modal -->
+<div id="proModal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeProModal()"></div>
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeProModal()">×</button>
+
+        <div class="pro-header">
+            <h2>Upgrade to <span class="highlight">IDOLFORGE PRO</span></h2>
+            <p>Unlock professional content planning tools</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Instagram Grid Planner</h3>
+                <p>Visual drag-and-drop grid preview. Plan your feed aesthetic before posting.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📁</div>
+                <h3>Unlimited Collections</h3>
+                <p>Save and organize multiple grid layouts. Perfect for different campaigns.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>Aesthetic Flow Analysis</h3>
+                <p>See how colors and themes flow across your grid. Maintain visual consistency.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">📅</div>
+                <h3>Content Calendar</h3>
+                <p>Schedule posts in advance. Never miss your posting schedule.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">💾</div>
+                <h3>Export & Share</h3>
+                <p>Export grid layouts as images or JSON. Share with your team.</p>
+            </div>
+
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Image Generation</h3>
+                <p>Generate real profile pictures and content images with Replicate AI.</p>
+            </div>
+        </div>
+
+        <div class="pricing">
+            <div class="price-card">
+                <div class="plan-name">PRO</div>
+                <div class="price">$19<span>/month</span></div>
+                <ul class="plan-features">
+                    <li>✓ Grid Planner</li>
+                    <li>✓ Unlimited Collections</li>
+                    <li>✓ AI Image Generation</li>
+                    <li>✓ Export Tools</li>
+                    <li>✓ Priority Support</li>
+                </ul>
+                <button class="btn-upgrade" onclick="handleUpgrade()">Upgrade to PRO</button>
+            </div>
+
+            <div class="price-card featured">
+                <div class="plan-badge">BEST VALUE</div>
+                <div class="plan-name">PRO Annual</div>
+                <div class="price">$15<span>/month</span></div>
+                <div class="price-note">Billed $180/year • Save $48</div>
+                <ul class="plan-features">
+                    <li>✓ Everything in PRO</li>
+                    <li>✓ 2 months FREE</li>
+                    <li>✓ Video Generation (coming soon)</li>
+                    <li>✓ Voice Cloning (coming soon)</li>
+                    <li>✓ API Access</li>
+                </ul>
+                <button class="btn-upgrade primary" onclick="handleUpgrade('annual')">Upgrade to PRO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+    }
+
+    .modal.hidden {
+        display: none;
+    }
+
+    .modal-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+        position: relative;
+        background: var(--dark);
+        border: 1px solid var(--border);
+        max-width: 900px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 60px;
+        z-index: 1;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+        border-color: var(--accent);
+    }
+
+    .pro-header {
+        text-align: center;
+        margin-bottom: 48px;
+    }
+
+    .pro-header h2 {
+        font-size: 2rem;
+        margin-bottom: 12px;
+    }
+
+    .highlight {
+        background: linear-gradient(135deg, #D4AF37, var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .pro-header p {
+        color: var(--text-dim);
+    }
+
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        margin-bottom: 48px;
+    }
+
+    .feature {
+        text-align: center;
+        padding: 24px;
+        background: var(--grey);
+        border: 1px solid var(--border);
+    }
+
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+    }
+
+    .feature h3 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    .feature p {
+        font-size: 0.875rem;
+        color: var(--text-dim);
+        line-height: 1.6;
+    }
+
+    .pricing {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .price-card {
+        padding: 32px;
+        background: var(--grey);
+        border: 1px solid var(--border);
+        text-align: center;
+        position: relative;
+    }
+
+    .price-card.featured {
+        border-color: #D4AF37;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(157, 78, 221, 0.1));
+    }
+
+    .plan-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #D4AF37, var(--accent));
+        color: var(--black);
+        padding: 4px 16px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .plan-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--accent);
+    }
+
+    .price {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .price span {
+        font-size: 1rem;
+        color: var(--text-dim);
+    }
+
+    .price-note {
+        font-size: 0.875rem;
+        color: var(--text-dim);
+        margin-bottom: 24px;
+    }
+
+    .plan-features {
+        list-style: none;
+        text-align: left;
+        margin: 24px 0;
+        padding: 0;
+    }
+
+    .plan-features li {
+        padding: 8px 0;
+        font-size: 0.875rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .plan-features li:last-child {
+        border-bottom: none;
+    }
+
+    .btn-upgrade {
+        width: 100%;
+        padding: 14px;
+        background: var(--grey);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-upgrade:hover {
+        border-color: var(--accent);
+    }
+
+    .btn-upgrade.primary {
+        background: linear-gradient(135deg, #D4AF37, var(--accent));
+        border: none;
+        color: var(--black);
+    }
+
+    @media (max-width: 768px) {
+        .modal-content {
+            padding: 40px 24px;
+        }
+
+        .features-grid,
+        .pricing {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script>
+    function closeProModal() {
+        document.getElementById('proModal').classList.add('hidden');
+    }
+
+    function showProModal() {
+        document.getElementById('proModal').classList.remove('hidden');
+    }
+
+    function handleUpgrade(plan = 'monthly') {
+        // For now, just enable pro features locally
+        // In production, integrate with Stripe/Paddle
+        localStorage.setItem('idolforge_pro', 'true');
+        localStorage.setItem('idolforge_pro_plan', plan);
+
+        alert(`🎉 PRO activated! (Demo mode)\n\nIn production, this would redirect to payment.`);
+        closeProModal();
+
+        // Redirect to grid planner
+        window.location.href = '/grid-planner.html';
+    }
+
+    function checkProStatus() {
+        return localStorage.getItem('idolforge_pro') === 'true';
+    }
+
+    function requirePro(feature) {
+        if (!checkProStatus()) {
+            showProModal();
+            return false;
+        }
+        return true;
+    }
+</script>
